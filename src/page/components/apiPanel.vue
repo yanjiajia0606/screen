@@ -1,0 +1,176 @@
+<!--
+ * @Author: 闫佳佳 18332162809@163.com
+ * @Date: 2022-11-01 17:57:55
+ * @LastEditors: 闫佳佳 18332162809@163.com
+ * @LastEditTime: 2022-12-16 18:23:04
+ * @FilePath: /avue-data/src/page/components/apiPanel.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<template>
+  <div>
+    <!-- <el-form-item label="数据模块">
+      <avue-select :dic="dic" v-model="db"></avue-select>
+    </el-form-item> -->
+    <el-form-item label="接口列表">
+      <avue-select :dic="apiDic" v-model="apiSrc"></avue-select>
+    </el-form-item>
+    <el-form-item label="接口地址" v-show="apiSrc"
+      ><span class="no-warp">{{ apiSrc }}</span>
+    </el-form-item>
+    <el-form-item label="请求方式" v-show="apiSrc">
+      <span class="no-warp post-method">{{ apiItem.method }}</span>
+    </el-form-item>
+    <!-- <el-form-item label="接口描述" v-show="apiSrc">
+      {{ apiParams.description }}
+      <span>({{ apiParams.summary }})</span>
+    </el-form-item> -->
+
+    <el-form-item label="请求参数" v-show="apiSrc">
+      <!-- <span class="no-warp">{{ this.apiVal }}</span> -->
+    </el-form-item>
+  </div>
+</template>
+
+<script>
+import { getApiScource, getApiGroup } from '@/api/v2'
+
+export default {
+  data() {
+    return {
+      db: '',
+      dic: [],
+      apiDic: [],
+      paths: {},
+      apiSrc: '',
+      apiItem: {
+        method: '',
+        params: {},
+        body: {},
+        publicParams: {},
+      },
+      // apiObject: {
+      //   apiSrc: '',
+      //   method: '',
+      // },
+      //   apiObject: "",
+    }
+  },
+  computed: {
+    // apiParams() {
+    //   if (this.paths[this.apiSrc]) {
+    //     if (this.paths[this.apiSrc].get) {
+    //       this.method = 'GET'
+    //     } else if (this.paths[this.apiSrc].post) {
+    //       this.method = 'POST'
+    //     }
+    //     this.$emit('getApi', {
+    //       // url: '/avue' + this.apiSrc,
+    //       url: '/pie',
+    //       method: this.method.toLowerCase(),
+    //     })
+    //     return this.paths[this.apiSrc].get || this.paths[this.apiSrc].post
+    //   }
+    //   return {}
+    // },
+    // method() {
+    //   if (this.paths[this.apiSrc]) {
+    //     if (this.paths[this.apiSrc].get) {
+    //       return 'GET'
+    //     } else if (this.paths[this.apiSrc].post) {
+    //       return 'POST'
+    //     } else {
+    //       return ''
+    //     }
+    //   }
+    // },
+  },
+  methods: {
+    getGroup() {
+      // getApiGroup().then((res) => {
+      //   const { data } = res
+      //   if (data.length) {
+      //     this.dic = data.map((item) => {
+      //       if (item.name == '漏洞模块') {
+      //         return {
+      //           label: item.name,
+      //           value: item.name,
+      //           item,
+      //         }
+      //       } else {
+      //         return {}
+      //       }
+      //     })
+      //     this.db = this.dic[0].value
+      //   }
+      // })
+    },
+    getApiList(db = this.db) {
+      this.apiDic.push({
+        label: '事件等级分布',
+        value:
+          '/api/cdos-analysis/SecEventLargeScreen/getEventCountPie?startTime=2022-11-17+00:00:00&endTime=2022-12-16+23:59:59',
+        method: 'GET',
+        params: {},
+        body: {},
+        hasGlobalParams:true,
+      })
+      // getApiScource(db).then((res) => {
+      //   const { paths } = res.data
+      //   this.paths = paths
+      //   for (let url in paths) {
+      //     if (paths[url].get) {
+      //       const obj = paths[url].get
+      //       this.apiDic.push({
+      //         label: obj.tags[0],
+      //         value: url,
+      //       })
+      //     }
+      //     //   this.apiDic.push({
+      //     //     label: paths[i].tags[0],
+      //     //     value: i,
+      //     //   });
+      //   }
+      // })
+    },
+  },
+  created() {
+    this.getApiList()
+  },
+  watch: {
+    apiSrc: {
+      handler() {
+        const apiData = this.apiDic.find((item) => item.value === this.apiSrc)
+        if (apiData) {
+          this.apiItem = Object.assign(this.apiItem, apiData)
+        } else {
+          this.apiItem = {
+            method: '',
+            params: {},
+            body: {},
+            publicParams: {},
+          }
+        }
+        this.$emit('updateapi', {
+          url: this.apiSrc,
+          method: this.apiItem.method.toLowerCase(),
+        })
+        // this.apiItem = apiData
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+.no-warp {
+  white-space: nowrap;
+}
+.post-method {
+  padding: 0 5px;
+  background: #0088ff;
+  margin-right: 5px;
+  color: #fff;
+}
+</style>
