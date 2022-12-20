@@ -49,6 +49,15 @@ export default (() => {
       url: {
         type: String
       },
+      requestParams: {
+        type: Object
+      },
+      requestBody: {
+        type: Object
+      },
+      apiData: {
+        type: Object
+      },
       wsUrl: {
         type: String
       },
@@ -287,7 +296,7 @@ export default (() => {
               this.updateChart();
               if (this.myChart) this.bindClick();
               if (typeof this.stylesFormatter === 'function') {
-                this.styles = this.stylesFormatter(this.dataChart, this.dataParams, this.getItemRefs()) || {};
+                this.styles = this.stylesFormatter(this.dataChart, thdataParamsis.dataParams, this.getItemRefs()) || {};
               }
               resolve(this.dataChart);
             }
@@ -299,26 +308,32 @@ export default (() => {
               let dataHeader = getFunction(safe.dataHeader)
               dataHeader = typeof (dataHeader) === 'function' && dataHeader(url) || {}
               let params = Object.assign(dataQuery, this.dataParams);
-              let axiosParams = {}
-              if (['post', 'put'].includes(safe.dataMethod)) {
-                axiosParams.data = params
-                if (safe.dataQueryType == 'form') {
-                  let formData = new FormData()
-                  Object.keys(params).forEach(ele => {
-                    formData.append(ele, params[ele])
-                  })
-                  axiosParams.data = formData
-                }
-              } else if (['get', 'delete'].includes(safe.dataMethod)) {
-                axiosParams.params = params
-              }
+              // let axiosParams = {}
+
+              // if (['post', 'put'].includes(safe.dataMethod)) {
+              //   axiosParams.data = params
+              //   if (safe.dataQueryType == 'form') {
+              //     let formData = new FormData()
+              //     Object.keys(params).forEach(ele => {
+              //       formData.append(ele, params[ele])
+              //     })
+              //     axiosParams.data = formData
+              //   }
+              // } else if (['get', 'delete'].includes(safe.dataMethod)) {
+              //   axiosParams.params = params
+              // }
+              let { requestParams = {}, requestBody = {} } = safe
               this.$axios({
                 ...{
                   method: safe.dataMethod,
                   url: url,
                   headers: dataHeader,
+                  params: { ...params, ...requestParams },
+                  body: {
+                    ...requestBody
+                  }
                 },
-                ...axiosParams
+                // ...axiosParams,
               }).then(res => {
                 this.dataAxios = res;
                 let result = res.data.data;

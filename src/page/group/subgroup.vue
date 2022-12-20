@@ -89,7 +89,6 @@ export default {
     }
   },
   created() {
-    window.thss = this
     this.init()
   },
   methods: {
@@ -140,6 +139,14 @@ export default {
       this.$set(this.contain.activeObj.component, 'height', height)
       this.$set(this.contain.activeObj, 'left', left)
       this.$set(this.contain.activeObj, 'top', top)
+    },
+  },
+  watch: {
+    nav: {
+      handler() {
+        window.contain = this.contain
+        console.log(this.nav, 'navvv')
+      },
     },
   },
 }

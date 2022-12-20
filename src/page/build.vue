@@ -237,7 +237,10 @@
                       :dic="dicOption.dataMethod"
                     ></avue-select>
                   </el-form-item> -->
-                  <apiPanel @updateapi="updateApi"></apiPanel>
+                  <apiPanel
+                    @updateApi="updateApi"
+                    @updateParams="updateParams"
+                  ></apiPanel>
                 </template>
                 <template v-else-if="isWs">
                   <el-form-item label="WS地址">
@@ -1233,10 +1236,17 @@ export default {
       this.nav = this.deepClone(prevState.nav)
       this.copyNav = JSON.stringify(prevState.nav)
     },
-    updateApi(params) {
-      const { url, method } = params
+    updateApi(data) {
+      const { url, method, params, apiData } = data
       this.$set(this.activeObj, 'url', url)
       this.$set(this.activeObj, 'dataMethod', method)
+      this.$set(this.activeObj, 'requestParams', params)
+      this.$set(this.activeObj, 'apiData', apiData)
+    },
+    updateParams(data) {
+      const { apiData, params } = data
+      this.$set(this.activeObj, 'requestParams', params)
+      this.$set(this.activeObj, 'apiData', apiData)
     },
   },
 }
