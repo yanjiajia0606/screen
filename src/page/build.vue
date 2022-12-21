@@ -240,6 +240,8 @@
                   <apiPanel
                     @updateApi="updateApi"
                     @updateParams="updateParams"
+                    :url="activeObj.url"
+                    v-bind="activeObj"
                   ></apiPanel>
                 </template>
                 <template v-else-if="isWs">

@@ -2,7 +2,7 @@
  * @Author: 闫佳佳 18332162809@163.com
  * @Date: 2022-11-01 17:57:55
  * @LastEditors: 闫佳佳 18332162809@163.com
- * @LastEditTime: 2022-12-20 10:16:00
+ * @LastEditTime: 2022-12-20 16:17:39
  * @FilePath: /avue-data/src/page/components/apiPanel.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,7 +12,11 @@
       <avue-select :dic="dic" v-model="db"></avue-select>
     </el-form-item> -->
     <el-form-item label="接口列表">
-      <avue-select :dic="apiDic" v-model="apiSrc"></avue-select>
+      <avue-select
+        :dic="apiDic"
+        v-model="apiSrc"
+        @change="changeUrl"
+      ></avue-select>
     </el-form-item>
     <el-form-item label="接口地址" v-show="apiSrc"
       ><span class="no-warp">{{ apiSrc }}</span>
@@ -25,7 +29,12 @@
       <span>({{ apiParams.summary }})</span>
     </el-form-item> -->
 
-    <el-collapse v-model="activeNames" accordion class="collapse-box">
+    <el-collapse
+      v-model="activeNames"
+      accordion
+      class="collapse-box"
+      v-show="apiSrc"
+    >
       <el-collapse-item title="请求参数" name="1">
         <div class="content">
           <apiParamsView
@@ -45,6 +54,14 @@
 import { getApiScource, getApiGroup } from '@/api/v2'
 import apiParamsView from './apiParamsView.vue'
 export default {
+  props: {
+    url: {
+      type: String,
+    },
+    apiData: {
+      type: Object,
+    },
+  },
   data() {
     return {
       activeNames: ['1'],
@@ -52,7 +69,6 @@ export default {
       dic: [],
       apiDic: [],
       paths: {},
-      apiSrc: '',
       apiItem: {
         method: '',
         params: [
@@ -64,6 +80,8 @@ export default {
         body: {},
         publicParams: {},
       },
+      apiSrc: '',
+
       // apiObject: {
       //   apiSrc: '',
       //   method: '',
@@ -74,35 +92,7 @@ export default {
   components: {
     apiParamsView,
   },
-  computed: {
-    // apiParams() {
-    //   if (this.paths[this.apiSrc]) {
-    //     if (this.paths[this.apiSrc].get) {
-    //       this.method = 'GET'
-    //     } else if (this.paths[this.apiSrc].post) {
-    //       this.method = 'POST'
-    //     }
-    //     this.$emit('getApi', {
-    //       // url: '/avue' + this.apiSrc,
-    //       url: '/pie',
-    //       method: this.method.toLowerCase(),
-    //     })
-    //     return this.paths[this.apiSrc].get || this.paths[this.apiSrc].post
-    //   }
-    //   return {}
-    // },
-    // method() {
-    //   if (this.paths[this.apiSrc]) {
-    //     if (this.paths[this.apiSrc].get) {
-    //       return 'GET'
-    //     } else if (this.paths[this.apiSrc].post) {
-    //       return 'POST'
-    //     } else {
-    //       return ''
-    //     }
-    //   }
-    // },
-  },
+  computed: {},
   methods: {
     getGroup() {
       // getApiGroup().then((res) => {
@@ -130,31 +120,13 @@ export default {
           value:
             '/api/cdos-analysis/SecEventLargeScreen/getEventCountPie?startTime=2022-11-17+00:00:00&endTime=2022-12-16+23:59:59',
           method: 'GET',
-          params: {
-            dept: {
-              name: 'XXX',
-              type: 'select',
-              default: 1,
-              desc: '',
-              option: [
-                {
-                  label: 1,
-                  value: 'id1',
-                },
-                {
-                  label: 2,
-                  value: 'id2',
-                },
-              ],
-            },
-          },
-          body: {},
+          params: {},
           hasGlobalParams: true,
         },
         {
           label: '风险状况TOP5',
           value:
-            '/api/cdos-analysis/linkRiskLargeScreen/linkTop5?dealStatus=&startTime=2022-11-20+00:00:00&endTime=2022-12-19+23:59:59',
+            '/api/cdos-analysis/linkRiskLargeScreen/linkTop5?startTime=2022-11-20+00:00:00&endTime=2022-12-19+23:59:59',
           method: 'GET',
           params: {
             isChina: {
@@ -180,7 +152,6 @@ export default {
               desc: '选择国内，获取数据为国内风险状况TOP5，选择国外，获取数据为国外风险状况TOP5',
             },
           },
-          body: {},
           hasGlobalParams: true,
         }
       )
@@ -215,41 +186,41 @@ export default {
         apiData: this.apiItem,
       })
     },
+    changeUrl(data) {
+      const { value } = data
+      this.apiSrc = value
+      const apiData = this.apiDic.find((item) => item.value === value)
+      if (apiData) {
+        this.apiItem = { ...apiData }
+      } else {
+        this.apiItem = {
+          method: '',
+          params: {},
+          body: {},
+          publicParams: {},
+        }
+      }
+      const { params = {} } = this.apiItem
+      let requestParams = {}
+      Object.keys(params).forEach((index) => {
+        requestParams[index] = params[index].value
+      })
+      this.$emit('updateApi', {
+        url: this.apiSrc,
+        method: this.apiItem.method.toLowerCase(),
+        apiData: this.apiItem,
+        params: requestParams,
+      })
+    },
   },
   created() {
     this.getApiList()
-  },
-  watch: {
-    apiSrc: {
-      handler() {
-        const apiData = this.apiDic.find((item) => item.value === this.apiSrc)
-        if (apiData) {
-          this.apiItem = Object.assign(this.apiItem, apiData)
-        } else {
-          this.apiItem = {
-            method: '',
-            params: {},
-            body: {},
-            publicParams: {},
-          }
-        }
-        const { params = {} } = this.apiItem
-        let requestParams = {}
-        Object.keys(params).forEach((index) => {
-          requestParams[index] = params[index].value
-        })
-        console.log(requestParams)
-        this.$emit('updateApi', {
-          url: this.apiSrc,
-          method: this.apiItem.method.toLowerCase(),
-          apiData: this.apiItem,
-          params: requestParams,
-        })
-        // this.apiItem = apiData
-      },
-      deep: true,
-      immediate: true,
-    },
+    this.apiSrc = this.url
+    this.apiItem = { ...this.apiData }
+    const index = this.apiDic.findIndex((item) => item.value === this.apiSrc)
+    if (index != -1) {
+      this.apiDic.splice(index, 1, this.apiItem)
+    }
   },
 }
 </script>
