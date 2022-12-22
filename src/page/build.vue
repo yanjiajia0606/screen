@@ -526,13 +526,13 @@
     <el-dialog
       append-to-body
       top="1%"
-      title="更多设置"
+      title="数据过滤"
       :close-on-click-modal="false"
       :visible.sync="show"
       width="70%"
     >
       <el-form size="small" label-width="130px">
-        <el-form-item label="数据类型">
+        <!-- <el-form-item label="数据类型">
           <avue-select
             v-model="activeObj.dataType"
             :dic="dicOption.dataType"
@@ -560,8 +560,8 @@
               >
             </el-upload>
           </el-form-item>
-        </template>
-        <template v-else-if="isSql">
+        </template> -->
+        <!-- <template v-else-if="isSql">
           <el-form-item label="数据源选择">
             <avue-select :dic="DIC.sql" v-model="db"></avue-select>
           </el-form-item>
@@ -580,17 +580,8 @@
               height="100"
             ></monaco-editor>
           </el-form-item>
-        </template>
-        <template v-else-if="isApi">
-          <!-- <el-form-item label="接口地址">
-            <avue-input v-model="activeObj.url"></avue-input>
-          </el-form-item>
-          <el-form-item label="请求方式">
-            <avue-select
-              v-model="activeObj.dataMethod"
-              :dic="dicOption.dataMethod"
-            ></avue-select>
-          </el-form-item> -->
+        </template> -->
+        <!-- <template v-else-if="isApi">
           <apiPanel @getApi="getApi"></apiPanel>
         </template>
         <template v-else-if="isWs">
@@ -650,7 +641,7 @@
               </template>
             </el-tab-pane>
           </el-tabs>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="过滤器">
           <monaco-editor
             v-model="activeObj.dataFormatter"

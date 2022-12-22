@@ -2,7 +2,7 @@
  * @Author: 闫佳佳 18332162809@163.com
  * @Date: 2022-11-01 17:57:55
  * @LastEditors: 闫佳佳 18332162809@163.com
- * @LastEditTime: 2022-12-20 16:17:39
+ * @LastEditTime: 2022-12-21 15:50:26
  * @FilePath: /avue-data/src/page/components/apiPanel.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -18,8 +18,10 @@
         @change="changeUrl"
       ></avue-select>
     </el-form-item>
-    <el-form-item label="接口地址" v-show="apiSrc"
-      ><span class="no-warp">{{ apiSrc }}</span>
+    <el-form-item label="接口地址" v-show="apiSrc">
+      <el-tooltip class="item" effect="dark" :content="apiSrc" placement="top">
+        <span class="no-warp api-value">{{ apiSrc }}</span>
+      </el-tooltip>
     </el-form-item>
     <el-form-item label="请求方式" v-show="apiSrc">
       <span class="no-warp post-method">{{ apiItem.method }}</span>
@@ -44,6 +46,18 @@
             :key="index"
             @updateParams="updateParams"
           ></apiParamsView>
+          <div class="global-option">
+            <div class="label">全局参数</div>
+            <el-switch v-model="apiItem.hasGlobalParams"> </el-switch>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="请求时是否使用全局参数"
+              placement="top"
+            >
+              <i class="el-icon-info info"></i>
+            </el-tooltip>
+          </div>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -66,6 +80,7 @@ export default {
     return {
       activeNames: ['1'],
       db: '',
+      value: true,
       dic: [],
       apiDic: [],
       paths: {},
@@ -79,6 +94,7 @@ export default {
         ],
         body: {},
         publicParams: {},
+        hasGlobalParams: false,
       },
       apiSrc: '',
 
@@ -149,12 +165,38 @@ export default {
               name: '状态',
               type: 'boolean',
               value: false,
+              desc: '状态值',
+            },
+          },
+          hasGlobalParams: true,
+        },
+        {
+          label: '外联态势',
+          value:
+            'api/cdos-analysis/linkRiskLargeScreen/getLogCountLine?&startTime=2022-11-22+00:00:00&endTime=2022-12-21+23:59:59',
+          method: 'GET',
+          params: {
+            isChina: {
+              name: '数据来源',
+              type: 'select',
+              value: 1,
               desc: '选择国内，获取数据为国内风险状况TOP5，选择国外，获取数据为国外风险状况TOP5',
+              option: [
+                {
+                  label: '国内',
+                  value: 0,
+                },
+                {
+                  label: '国外',
+                  value: 1,
+                },
+              ],
             },
           },
           hasGlobalParams: true,
         }
       )
+      //
       // getApiScource(db).then((res) => {
       //   const { paths } = res.data
       //   this.paths = paths
@@ -217,6 +259,9 @@ export default {
     this.getApiList()
     this.apiSrc = this.url
     this.apiItem = { ...this.apiData }
+    if (!this.apiItem.hasOwnProperty('hasGlobalParams')) {
+      this.apiItem['hasGlobalParams'] = false
+    }
     const index = this.apiDic.findIndex((item) => item.value === this.apiSrc)
     if (index != -1) {
       this.apiDic.splice(index, 1, this.apiItem)
@@ -229,6 +274,11 @@ export default {
 .no-warp {
   white-space: nowrap;
 }
+.api-value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .post-method {
   padding: 0 5px;
   background: #0088ff;
@@ -240,6 +290,31 @@ export default {
     padding: 10px;
     background: #171b22;
     color: #fff;
+    .global-option {
+      font-size: 12px;
+      display: flex;
+      /* margin-left: 20px; */
+      align-items: center;
+      .label {
+        width: 90px;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        /* border: 1px solid; */
+        text-align: center;
+        margin-right: 5px;
+        border-radius: 2px;
+        background: #b4410b;
+      }
+      .info {
+        margin-left: 5px;
+        font-size: 14px;
+        color: #cbe3e9;
+        cursor: pointer;
+      }
+    }
   }
 }
 </style>
