@@ -385,7 +385,7 @@ export default (() => {
             this.$nextTick(() => {
               getData();
               clearInterval(this.checkChart);
-              if (this.time !== 0 && this.disabled) {
+              if (this.time !== 0) {
                 this.checkChart = setInterval(() => {
                   getData();
                 }, this.time);

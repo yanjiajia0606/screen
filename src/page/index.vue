@@ -1,14 +1,16 @@
 <template>
   <div class="index">
     <div class="header">
-      <img :src="`${publicPath}img/nav-img.png`"
-           alt=""
-           width="100%"
-           height="220px">
+      <img
+        :src="`${publicPath}img/nav-img.png`"
+        alt=""
+        width="100%"
+        height="220px"
+      />
       <div class="title">
         <p>
-          {{$website.name}}<br />
-          <small>{{$website.subName}}</small>
+          {{ $website.name }}<br />
+          <small>{{ $website.subName }}</small>
         </p>
       </div>
       <navs @change="handleChange"></navs>
@@ -21,22 +23,21 @@
 <script>
 import navs from './nav/index'
 export default {
-  name: "index",
+  name: 'index',
   components: {
-    navs
+    navs,
   },
-  data () {
+  data() {
     return {
       publicPath: process.env.VUE_APP_PATH,
     }
   },
-  mounted () {
-  },
+  mounted() {},
   methods: {
-    handleChange (item, index) {
+    handleChange(item, index) {
       this.$router.push({ path: item.path })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">
