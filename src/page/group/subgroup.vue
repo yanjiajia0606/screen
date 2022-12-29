@@ -141,13 +141,5 @@ export default {
       this.$set(this.contain.activeObj, 'top', top)
     },
   },
-  watch: {
-    nav: {
-      handler() {
-        window.contain = this.contain
-        console.log(this.nav, 'navvv')
-      },
-    },
-  },
 }
 </script>

@@ -344,7 +344,9 @@ export default (() => {
                   this.dataChart = result;
                 }
                 bindEvent();
-              });
+              }).catch((err) => {
+                reject(err)
+              })
             } else if (isWs) {
               let url = safe.wsUrl
               if (this.validatenull(url)) return

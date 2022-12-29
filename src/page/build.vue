@@ -944,14 +944,18 @@ export default {
           )
         )
       }
-      this.handleRefresh().then((res = {}) => {
-        if (!this.validatenull(res)) {
-          this.dataRes = JSON.stringify(res, null, 4)
-        } else {
-          this.dataRes = ''
-        }
-        if (tip) this.$message.success('请求数据成功')
-      })
+      this.handleRefresh()
+        .then((res = {}) => {
+          if (!this.validatenull(res)) {
+            this.dataRes = JSON.stringify(res, null, 4)
+          } else {
+            this.dataRes = ''
+          }
+          if (tip) this.$message.success('请求数据成功')
+        })
+        .catch(() => {
+          if (tip) this.$message.error('请求数据失败')
+        })
     },
     handleSetting() {
       this.dataTabs = 0
