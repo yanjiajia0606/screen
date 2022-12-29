@@ -199,7 +199,7 @@
                     class="block"
                     @click="globShow = true"
                     >更多设置</el-button
-                  >
+                  >dataType
                 </el-form-item>
               </template>
             </el-form>
@@ -209,13 +209,13 @@
             <span slot="label"><i class="el-icon-document-copy"></i>数据</span>
             <template v-if="menuTabs == 1">
               <el-form label-width="120px" label-position="left" size="small">
-                <el-form-item label="数据类型">
+                <!-- <el-form-item label="数据类型">
                   <avue-select
                     v-model="activeObj.dataType"
                     :dic="dicOption.dataType"
                   ></avue-select>
-                </el-form-item>
-                <template v-if="isSql">
+                </el-form-item> -->
+                <!-- <template v-if="isSql">
                   <el-form-item label="数据源选择">
                     <avue-select :dic="DIC.sql" v-model="db"></avue-select>
                   </el-form-item>
@@ -226,9 +226,9 @@
                       height="100"
                     ></monaco-editor>
                   </el-form-item>
-                </template>
-                <template v-else-if="isApi">
-                  <!-- <el-form-item label="接口地址">
+                </template> -->
+                <!-- <template v-else-if="isApi"> -->
+                <!-- <el-form-item label="接口地址">
                     <avue-input v-model="activeObj.url"></avue-input>
                   </el-form-item>
                   <el-form-item label="请求方式">
@@ -237,33 +237,35 @@
                       :dic="dicOption.dataMethod"
                     ></avue-select>
                   </el-form-item> -->
-                  <apiPanel
+                <!-- <apiPanel
                     @updateApi="updateApi"
                     @updateParams="updateParams"
                     :url="activeObj.url"
                     v-bind="activeObj"
-                  ></apiPanel>
-                </template>
-                <template v-else-if="isWs">
+                  ></apiPanel> -->
+                <!-- </template> -->
+                <!-- <template v-else-if="isWs">
                   <el-form-item label="WS地址">
                     <el-input v-model="activeObj.wsUrl"> </el-input>
                   </el-form-item>
-                </template>
-                <template v-else-if="isRecord">
+                </template> -->
+                <!-- <template v-else-if="isRecord">
                   <el-form-item label="数据集选择">
                     <avue-select
                       :dic="DIC.data"
                       v-model="activeObj.record"
                     ></avue-select>
                   </el-form-item>
-                </template>
-                <el-form-item label="刷新时间" v-if="isApi || isWs || isSql">
-                  <avue-input-number
+                </template> -->
+                <!-- <el-form-item label="数据更新" v-if="isApi || isWs || isSql">
+                  每<avue-input-number
                     v-model="activeObj.time"
                     placeholder="0"
-                  ></avue-input-number>
-                </el-form-item>
-                <el-form-item label-width="0">
+                  ></avue-input-number
+                  >秒请求一次
+                </el-form-item> -->
+
+                <!-- <el-form-item label-width="0">
                   <el-button
                     size="small"
                     type="primary"
@@ -271,8 +273,8 @@
                     @click="handleSetting"
                     >更多设置</el-button
                   >
-                </el-form-item>
-                <el-form-item label-width="0">
+                </el-form-item> -->
+                <!-- <el-form-item label-width="0">
                   <el-button
                     size="small"
                     type="danger"
@@ -280,8 +282,8 @@
                     @click="openCode('stylesFormatter', '编辑样式')"
                     >编辑样式</el-button
                   >
-                </el-form-item>
-                <el-form-item label-width="0">
+                </el-form-item> -->
+                <!-- <el-form-item label-width="0">
                   <el-button
                     size="small"
                     type="primary"
@@ -289,15 +291,108 @@
                     @click="handleRes"
                     >请求数据</el-button
                   >
-                </el-form-item>
-                <el-form-item label-width="0">
+                </el-form-item> -->
+                <!-- <el-form-item label-width="0">
                   <monaco-editor
                     v-model="dataRes"
                     disabled
                     height="400"
                   ></monaco-editor>
-                </el-form-item>
+                </el-form-item> -->
               </el-form>
+              <div class="comp-data">
+                <el-steps direction="vertical">
+                  <el-step title="配置数据">
+                    <div class="config-block" slot="description">
+                      <div class="config-control">
+                        <div class="config-title nowrap">数据源类型</div>
+                        <avue-select
+                          class="width-div"
+                          v-model="activeObj.dataType"
+                          :dic="dicOption.dataType"
+                          size="small"
+                        ></avue-select>
+                      </div>
+                      <div v-if="isApi">
+                        <apiPanel
+                          @updateApi="updateApi"
+                          @updateParams="updateParams"
+                          :url="activeObj.url"
+                          v-bind="activeObj"
+                        ></apiPanel>
+                      </div>
+                    </div>
+                  </el-step>
+                  <el-step title="前端数据处理">
+                    <div class="config-block" slot="description">
+                      <div class="config-control">
+                        <div class="config-title nowrap">数据过滤器</div>
+                        <el-button
+                          size="mini"
+                          type="primary"
+                          @click="handleSetting"
+                          >添加过滤器</el-button
+                        >
+                      </div>
+                    </div>
+                  </el-step>
+                  <el-step title="数据更新">
+                    <div class="config-block" slot="description">
+                      <!-- <div class="config-control">
+                        <div class="config-title nowrap">数据源类型</div>
+                        每<avue-input-number
+                          v-model="activeObj.time"
+                          placeholder="0"
+                          size="mini"
+                        ></avue-input-number
+                        >秒请求一次
+                      </div> -->
+                      <div class="config-control">
+                        <div class="config-title nowrap">
+                          <el-checkbox
+                            v-model="activeObj.autoUpdateEnable"
+                            size="mini"
+                            class="mr5"
+                          ></el-checkbox>
+                          自动更新
+                        </div>
+                        <div
+                          class="width-div"
+                          v-if="activeObj.autoUpdateEnable"
+                        >
+                          每
+                          <el-input-number
+                            v-model="activeObj.time"
+                            class="mlr5"
+                            controls-position="right"
+                            size="mini"
+                            :min="1"
+                          ></el-input-number>
+                          秒请求一次
+                        </div>
+                      </div>
+                    </div>
+                  </el-step>
+                  <el-step title="数据响应结果">
+                    <div class="config-block" slot="description">
+                      <div>
+                        <monaco-editor
+                          v-model="dataRes"
+                          disabled
+                          height="300"
+                        ></monaco-editor>
+                      </div>
+                      <el-button
+                        size="small"
+                        type="primary"
+                        class="w128 block mt10"
+                        @click="handleRes"
+                        >请求数据</el-button
+                      >
+                    </div>
+                  </el-step>
+                </el-steps>
+              </div>
             </template>
           </el-tab-pane>
           <!-- 交互事件配置 -->
@@ -1291,5 +1386,175 @@ export default {
   flex: 1;
   overflow: hidden;
   position: relative;
+}
+.comp-data {
+  padding-left: 5px;
+  padding-bottom: 10px;
+  .config-block {
+    .config-control {
+      padding: 4px 0 4px 8px;
+      margin-bottom: 10px;
+      display: flex;
+      width: 100%;
+      position: relative;
+      align-items: center;
+      color: #fafafa;
+      .config-title {
+        width: 80px;
+      }
+    }
+    .eidtor-wrap {
+      margin-bottom: 10px;
+    }
+    .flex-row {
+      display: flex;
+      justify-content: space-between;
+      .ml10 {
+        margin-left: 10px;
+      }
+      .table-name {
+        flex: none;
+        width: 110px;
+        line-height: 28px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    .field-box {
+      width: 100%;
+      height: 85px;
+      background: #0c0b0b;
+      border-radius: 8px;
+      overflow-y: auto;
+      .field-div {
+        display: inline-block;
+        cursor: pointer;
+        margin-left: 8px;
+        margin-top: 8px;
+        padding: 0px 8px;
+        background: #191d25;
+        line-height: 22px;
+        border-radius: 16px;
+        border: 1px solid rgba(76, 82, 95, 0.32);
+        ::v-deep {
+          .el-input__inner {
+            height: 22px;
+            border: none;
+            padding-right: 20px;
+            background: none;
+          }
+          .el-input__icon {
+            width: 13px;
+            height: 22px;
+            line-height: 22px;
+            cursor: pointer;
+          }
+          .el-select {
+            max-width: 105px;
+          }
+        }
+      }
+    }
+  }
+  ::v-deep {
+    .mapping-t {
+      line-height: 1;
+      .t-icon {
+        font-size: 16px;
+        &.green {
+          color: #00a755;
+        }
+        &.red {
+          color: #ef5350;
+        }
+      }
+    }
+    // .el-input-number--mini {
+    //   width: 90px;
+    // }
+    .CodeMirror {
+      height: 238px;
+    }
+  }
+  .mapping-t {
+    line-height: 1;
+    .t-icon {
+      font-size: 16px;
+      &.green {
+        color: #00a755;
+      }
+      &.red {
+        color: #ef5350;
+      }
+    }
+  }
+  .el-input-number--mini {
+    width: 90px;
+  }
+  .CodeMirror {
+    height: 238px;
+  }
+  .el-step {
+    .el-step__description {
+      padding-right: 10px;
+      margin-top: 0;
+    }
+    &.is-vertical .el-step__main {
+      padding-left: 8px;
+    }
+    .el-step__icon {
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      background-color: #2681ff;
+      top: -3px;
+    }
+    .el-step__icon.is-text {
+      border: none;
+    }
+    .el-step__icon-inner {
+      font-weight: 400;
+    }
+    &.is-vertical .el-step__line {
+      width: 2px;
+      top: 0;
+      bottom: 0;
+      left: 8px;
+      background-color: #2e343c;
+    }
+    &.is-vertical .el-step__title {
+      font-size: 14px;
+      line-height: 18px;
+    }
+    &.is-vertical .el-step__head {
+      width: 18px;
+    }
+    &.error .el-step__icon {
+      background: #f56c6c;
+    }
+  }
+  .result-btn {
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 30px;
+  }
+  .w100 {
+    width: 100%;
+  }
+  .w128 {
+    width: 128px;
+  }
+  .pb10 {
+    padding-bottom: 10px;
+  }
+  .mt10 {
+    margin-top: 10px;
+  }
+  .tips {
+    padding-left: 8px;
+    font-size: 12px;
+    color: #999;
+  }
 }
 </style>

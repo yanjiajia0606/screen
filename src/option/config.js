@@ -76,7 +76,9 @@ export const dicOption = {
   fontWeight: [{ label: 'normal', value: 'normal' }, { label: 'bold', value: 'bold' }, { label: 'bolder', value: 'bolder' }, { label: 'ligter', value: 'ligter' }],
   border: [{ label: '无边框', value: '' }, { label: '内置图片', value: 'img' }, { label: '内置边框', value: 'border' }],
   textAlign: [{ label: '居中', value: 'center' }, { label: '左对齐', value: 'left' }, { label: '右对齐', value: 'right' }],
-  dataType: [{ label: '静态数据', value: 0 }, { label: 'API接口数据', value: 1 }, { label: 'SQL数据库数据', value: 2 }, { label: 'WebScoket', value: 3 }, { label: 'Record数据集', value: 4 }],
+  // dataType: [{ label: '静态数据', value: 0 }, { label: 'API接口数据', value: 1 }, { label: 'SQL数据库数据', value: 2 }, { label: 'WebScoket', value: 3 }, { label: 'Record数据集', value: 4 }],
+  dataType: [{ label: '静态数据', value: 0 }, { label: 'API接口数据', value: 1 }],
+
   orientList: [{ label: '竖排', value: 'vertical' }, { label: '横排', value: 'horizontal' }],
   dataMethod: [{ label: 'GET', value: 'get' }, { label: 'DELETE', value: 'delete' }, { label: 'POST', value: 'post' }, { label: 'PUT', value: 'put' }],
   eventList: ['vue', 'common', 'datav', 'bar', 'line', 'flop', 'funnel', 'gauge', 'map', 'pie', 'radar', 'text', 'tabs', 'rectangle'],
@@ -109,7 +111,7 @@ export const dicOption = {
 }
 
 
-function concat (prop, count, type, extend = [], defaults) {
+function concat(prop, count, type, extend = [], defaults) {
   let list = [];
   for (let i = 1; i <= count; i++) {
     list.push({

@@ -44,7 +44,9 @@ export default (() => {
       },
       time: {
         type: Number,
-        default: 0
+        default: 5000
+      },
+      autoUpdateEnable: {
       },
       url: {
         type: String
@@ -387,10 +389,10 @@ export default (() => {
             this.$nextTick(() => {
               getData();
               clearInterval(this.checkChart);
-              if (this.time !== 0) {
+              if (this.autoUpdateEnable) {
                 this.checkChart = setInterval(() => {
                   getData();
-                }, this.time);
+                }, this.time * 1000);
               }
             });
           }

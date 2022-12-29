@@ -2,35 +2,71 @@
  * @Author: 闫佳佳 18332162809@163.com
  * @Date: 2022-11-01 17:57:55
  * @LastEditors: 闫佳佳 18332162809@163.com
- * @LastEditTime: 2022-12-21 15:50:26
+ * @LastEditTime: 2022-12-29 18:05:42
  * @FilePath: /avue-data/src/page/components/apiPanel.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <div>
+  <div class="config-block">
     <!-- <el-form-item label="数据模块">
       <avue-select :dic="dic" v-model="db"></avue-select>
     </el-form-item> -->
-    <el-form-item label="接口列表">
+    <!-- <el-form-item label="接口列表">
       <avue-select
         :dic="apiDic"
         v-model="apiSrc"
         @change="changeUrl"
       ></avue-select>
-    </el-form-item>
-    <el-form-item label="接口地址" v-show="apiSrc">
+    </el-form-item> -->
+
+    <div class="config-control">
+      <div class="config-title nowrap">接口列表</div>
+      <div class="width-div">
+        <avue-select
+          :dic="apiDic"
+          v-model="apiSrc"
+          @change="changeUrl"
+          size="mini"
+        ></avue-select>
+      </div>
+    </div>
+    <div class="config-control">
+      <div class="config-title nowrap">接口地址</div>
+      <div class="width-div">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          :content="apiSrc"
+          placement="top"
+        >
+          <span class="no-warp api-value">{{ apiSrc }}</span>
+        </el-tooltip>
+      </div>
+    </div>
+    <div class="config-control">
+      <div class="config-title nowrap">请求方式</div>
+      <div class="width-div">
+        <span class="no-warp post-method">{{ apiItem.method }}</span>
+      </div>
+    </div>
+    <!-- <el-form-item label="接口地址" v-show="apiSrc">
       <el-tooltip class="item" effect="dark" :content="apiSrc" placement="top">
         <span class="no-warp api-value">{{ apiSrc }}</span>
       </el-tooltip>
-    </el-form-item>
-    <el-form-item label="请求方式" v-show="apiSrc">
+    </el-form-item> -->
+    <!-- <el-form-item label="请求方式" v-show="apiSrc">
       <span class="no-warp post-method">{{ apiItem.method }}</span>
-    </el-form-item>
+    </el-form-item> -->
     <!-- <el-form-item label="接口描述" v-show="apiSrc">
       {{ apiParams.description }}
       <span>({{ apiParams.summary }})</span>
     </el-form-item> -->
-
+    <!-- <div class="config-control">
+      <div class="config-title nowrap">参数配置</div>
+      <div class="width-div">
+        <span class="no-warp post-method">{{ apiItem.method }}</span>
+      </div>
+    </div> -->
     <el-collapse
       v-model="activeNames"
       accordion
@@ -278,6 +314,7 @@ export default {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 200px;
 }
 .post-method {
   padding: 0 5px;
@@ -305,7 +342,7 @@ export default {
         /* border: 1px solid; */
         text-align: center;
         margin-right: 5px;
-        border-radius: 2px;
+        border-radius: 5px;
         background: #b4410b;
       }
       .info {
@@ -315,6 +352,17 @@ export default {
         cursor: pointer;
       }
     }
+  }
+  ::v-deep .el-collapse-item:last-child {
+    margin-bottom: 10px;
+  }
+  ::v-deep .el-collapse-item__arrow {
+    left: 300px;
+  }
+  ::v-deep .el-collapse-item__header {
+    padding-left: 10px;
+    font-weight: 400;
+    color: #409eff;
   }
 }
 </style>
